@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}ჩემი მაღაზია{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <section class="hero">
+        <div>
+            <h1>ყველაფერი შენი სამუშაო მაგიდისთვის.</h1>
+            <p>ლეპტოპები, მონიტორები და აქსესუარები მისაღებ ფასებში.</p>
+            <a class="button" href="{% url 'products' %}">პროდუქტების ნახვა</a>
+        </div>
+
+        <svg class="scene" data-draw viewBox="0 0 480 320" fill="none" stroke="currentColor"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="10" y1="300" x2="470" y2="300"/>
+            <rect x="170" y="40" width="270" height="170" rx="10"/>
+            <path d="M305 210v52M265 262h80"/>
+            <rect x="24" y="222" width="116" height="64" rx="5"/>
+            <path d="M10 286h144l-6 14H16z"/>
+            <rect x="214" y="274" width="150" height="20" rx="4"/>
+            <path d="M228 284h122"/>
+            <rect x="394" y="266" width="24" height="32" rx="12"/>
+            <path d="M406 266v12"/>
+        </svg>
+    </section>
+
+    <section class="why">
+        <h2 class="reveal">მარტივი არჩევანი, საიმედო მომსახურება.</h2>
+        <ul class="why-list">
+            <li class="why-item reveal" style="--i:1">
+                <h3>მიწოდება</h3>
+                <p>შეკვეთა იგზავნება ერთ-ორ სამუშაო დღეში.</p>
+            </li>
+            <li class="why-item reveal" style="--i:2">
+                <h3>გარანტია</h3>
+                <p>ყველა მოწყობილობას გარანტია აქვს.</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="cta reveal">
+        <h2>იპოვე შენი შემდეგი სამუშაო სივრცე.</h2>
+        <p></p>
+        <a class="button button-light" href="{% url 'products' %}">პროდუქტების ნახვა</a>
+    </section>
+
+</div>
+{% endblock %}

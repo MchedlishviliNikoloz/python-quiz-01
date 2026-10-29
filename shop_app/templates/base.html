@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}ჩემი მაღაზია{% endblock %}</title>
+    <script>document.documentElement.classList.add('js');</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f6f6f7;
+            --surface: #ffffff;
+            --ink: #16161a;
+            --muted: #6a6a72;
+            --line: #e2e2e5;
+            --soft: #ececef;
+            --ease: cubic-bezier(.2, .7, .2, 1);
+            --max: 1080px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: "DM Sans", "Noto Sans Georgian", system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--ink);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            animation: page-in .6s var(--ease) both;
+        }
+        main { flex: 1; }
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+        .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+        /* Header */
+        .site-header {
+            position: sticky; top: 0; z-index: 10;
+            background: rgba(246, 246, 247, .82);
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            border-bottom: 1px solid transparent;
+            transition: border-color .25s;
+        }
+        .site-header.scrolled { border-bottom-color: var(--line); }
+        .site-header .container { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+        .brand { font-size: 1.125rem; font-weight: 600; letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
+        .nav { display: flex; gap: 32px; }
+        .nav a {
+            position: relative; padding: 4px 0;
+            font-size: .9375rem; color: var(--muted); text-decoration: none;
+            transition: color .2s;
+        }
+        .nav a::after {
+            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+            background: var(--ink); transform: scaleX(0); transform-origin: left;
+            transition: transform .35s var(--ease);
+        }
+        .nav a:hover, .nav a[aria-current="page"] { color: var(--ink); }
+        .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+        /* Button */
+        .button {
+            display: inline-block; padding: 14px 28px;
+            font: inherit; font-size: .9375rem; font-weight: 500;
+            color: #fff; background: var(--ink);
+            border: 0; border-radius: 8px; text-decoration: none; cursor: pointer;
+            transition: transform .25s var(--ease), background-color .2s;
+        }
+        .button:hover { background: #34343b; transform: translateY(-2px); }
+        .button:active { transform: translateY(0) scale(.98); }
+        .button-light { color: var(--ink); background: #fff; }
+        .button-light:hover { background: #e9e9ec; }
+
+        /* Footer */
+        .site-footer { border-top: 1px solid var(--line); font-size: .875rem; color: var(--muted); }
+        .site-footer .container { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 28px; padding-bottom: 28px; }
+
+        /* Motion system: scroll reveal + line drawing */
+        .js .reveal {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity .8s var(--ease), transform .8s var(--ease);
+            transition-delay: calc(var(--i, 0) * 90ms);
+        }
+        .js .reveal.in { opacity: 1; transform: none; }
+
+        .js [data-draw] * {
+            stroke-dasharray: 1; stroke-dashoffset: 1;
+            transition: stroke-dashoffset 1.5s var(--ease);
+            transition-delay: calc(var(--d, 0) * 110ms + .15s);
+        }
+        .js [data-draw].in * { stroke-dashoffset: 0; }
+
+        @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ---------- Home ---------- */
+        .hero { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 48px; padding: 96px 0 104px; }
+        .hero h1 { font-size: clamp(2.25rem, 5.6vw, 4rem); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; }
+        .hero p { max-width: 42ch; margin: 28px 0 40px; font-size: 1.1875rem; color: var(--muted); }
+        .scene { width: 100%; height: auto; color: var(--ink); }
+
+        .why { display: grid; grid-template-columns: 1fr 1.4fr; gap: 48px; padding: 88px 0; border-top: 1px solid var(--line); }
+        .why h2 { font-size: 2rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+        .why-list { list-style: none; }
+        .why-item {
+            display: grid; grid-template-columns: 160px 1fr; gap: 24px;
+            padding: 28px 0; border-top: 1px solid var(--line);
+            transition: padding-left .4s var(--ease);
+        }
+        .why-item:first-child { border-top: 0; padding-top: 0; }
+        .why-item:hover { padding-left: 12px; }
+        .why-item h3 { font-size: 1.0625rem; font-weight: 500; }
+        .why-item p { color: var(--muted); }
+
+        .cta { margin-bottom: 96px; padding: 72px 48px; color: #fff; background: var(--ink); border-radius: 20px; }
+        .cta h2 { max-width: 20ch; font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 600; line-height: 1.2; letter-spacing: -.01em; }
+        .cta p { margin: 16px 0 32px; color: #a8a8b0; }
+
+        /* ---------- Products ---------- */
+        .page-head { padding: 80px 0 32px; }
+        .page-head h1 { font-size: clamp(2rem, 4.6vw, 3.25rem); font-weight: 600; letter-spacing: -.01em; line-height: 1.15; }
+        .page-head p { margin-top: 12px; color: var(--muted); }
+
+        .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 28px; }
+        .chips { display: flex; gap: 8px; }
+        .chip {
+            padding: 8px 18px; font: inherit; font-size: .875rem; color: var(--muted);
+            background: transparent; border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
+            transition: color .2s, background-color .25s, border-color .2s;
+        }
+        .chip:hover { color: var(--ink); border-color: var(--ink); }
+        .chip[aria-pressed="true"] { color: #fff; background: var(--ink); border-color: var(--ink); }
+        .count { font-size: .9375rem; color: var(--muted); }
+
+        .grid { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding-bottom: 104px; }
+        .card {
+            overflow: hidden; background: var(--surface);
+            border: 1px solid var(--line); border-radius: 16px;
+            transition: transform .45s var(--ease), border-color .25s;
+        }
+        .js .card.reveal { transition: transform .8s var(--ease), opacity .8s var(--ease), border-color .25s; transition-delay: calc(var(--i, 0) * 90ms), calc(var(--i, 0) * 90ms), 0s; }
+        .card:hover { transform: translateY(-6px); border-color: var(--ink); }
+        .card[hidden] { display: none; }
+        .card.pop { animation: pop .5s var(--ease) both; }
+        @keyframes pop { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+        .thumb { display: grid; place-items: center; height: 240px; background: var(--soft); }
+        .thumb svg { width: 150px; height: auto; color: var(--ink); transition: transform .6s var(--ease); }
+        .card:hover .thumb svg { transform: translateY(-6px) scale(1.06); }
+
+        .card-body { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 24px; }
+        .card-name { font-size: 1.25rem; font-weight: 500; }
+        .tag { display: inline-block; margin-top: 8px; padding: 3px 10px; font-size: .8125rem; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; }
+        .tag-premium { color: var(--ink); border-color: var(--ink); }
+        .card-price { font-size: 1.375rem; font-weight: 500; letter-spacing: -.02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .card-price small { font-size: .875rem; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+        .empty { padding: 48px 0 104px; color: var(--muted); }
+
+        @media (max-width: 860px) {
+            .hero, .why { grid-template-columns: 1fr; gap: 40px; }
+            .hero { padding: 56px 0 72px; }
+            .why { padding: 64px 0; }
+            .why-item { grid-template-columns: 1fr; gap: 4px; }
+            .cta { padding: 48px 28px; }
+        }
+        @media (max-width: 640px) {
+            .grid { grid-template-columns: 1fr; }
+            .page-head { padding-top: 48px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body { animation: none; }
+            html { scroll-behavior: auto; }
+            .js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .js [data-draw] * { stroke-dashoffset: 0 !important; transition: none !important; }
+            .card.pop { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <a class="brand" href="{% url 'home' %}">ჩემი მაღაზია</a>
+            <nav class="nav" aria-label="ძირითადი მენიუ">
+                <a href="{% url 'home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>მთავარი</a>
+                <a href="{% url 'products' %}"{% if request.resolver_match.url_name == 'products' %} aria-current="page"{% endif %}>პროდუქტები</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>ჩემი მაღაზია</span>
+            <span>&copy; {% now "Y" %}</span>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            document.querySelectorAll('[data-draw]').forEach(function (svg) {
+                svg.querySelectorAll('*').forEach(function (el, i) {
+                    el.setAttribute('pathLength', '1');
+                    el.style.setProperty('--d', i);
+                });
+            });
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal, [data-draw]').forEach(function (el) { io.observe(el); });
+
+            var header = document.querySelector('.site-header');
+            function onScroll() { header.classList.toggle('scrolled', window.scrollY > 8); }
+            onScroll();
+            addEventListener('scroll', onScroll, { passive: true });
+        })();
+    </script>
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

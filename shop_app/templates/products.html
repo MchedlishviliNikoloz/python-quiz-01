@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}პროდუქტები | ჩემი მაღაზია{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="page-head">
+        <h1>ჩვენი პროდუქტები</h1>
+        <p></p>
+    </div>
+
+    <div class="toolbar">
+        <div class="chips" role="group" aria-label="პროდუქტების ფილტრი">
+            <button class="chip" type="button" data-filter="all" aria-pressed="true">ყველა</button>
+            <button class="chip" type="button" data-filter="premium" aria-pressed="false">ძვირადღირებული</button>
+            <button class="chip" type="button" data-filter="budget" aria-pressed="false">ბიუჯეტური</button>
+        </div>
+        <span class="count" id="count" aria-live="polite">{{ products|length }} პროდუქტი</span>
+    </div>
+
+    <ul class="grid">
+        {% for product in products %}
+        <li class="card reveal" style="--i:{{ forloop.counter0 }}" data-tier="{% if product.price > 500 %}premium{% else %}budget{% endif %}">
+            <div class="thumb">
+                <svg data-draw viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="1.6"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    {% with n=product.name|lower %}
+                    {% if n == "laptop" or n == "ლეპტოპი" %}
+                        <rect x="28" y="14" width="64" height="42" rx="3"/>
+                        <path d="M14 62h92l-7 11H21z"/>
+                    {% elif n == "mouse" or n == "მაუსი" %}
+                        <rect x="43" y="10" width="34" height="58" rx="17"/>
+                        <path d="M60 10v22"/>
+                    {% elif n == "keyboard" or n == "კლავიატურა" %}
+                        <rect x="8" y="24" width="104" height="44" rx="5"/>
+                        <path d="M20 36h80M20 46h80M34 57h52"/>
+                    {% elif n == "monitor" or n == "მონიტორი" %}
+                        <rect x="18" y="8" width="84" height="54" rx="4"/>
+                        <path d="M60 62v13M44 77h32"/>
+                    {% else %}
+                        <path d="M60 10l36 18v34L60 80 24 62V28z"/>
+                        <path d="M24 28l36 18 36-18M60 46v34"/>
+                    {% endif %}
+                    {% endwith %}
+                </svg>
+            </div>
+            <div class="card-body">
+                <div>
+                    <h2 class="card-name">{{ product.name }}</h2>
+                    {% if product.price > 500 %}
+                        <span class="tag tag-premium">ძვირადღირებული პროდუქტი</span>
+                    {% else %}
+                        <span class="tag">ბიუჯეტური პროდუქტი</span>
+                    {% endif %}
+                </div>
+                <p class="card-price">{{ product.price }} <small>GEL</small></p>
+            </div>
+        </li>
+        {% empty %}
+        <li class="empty">პროდუქტები ჯერ არ არის.</li>
+        {% endfor %}
+    </ul>
+
+    <p class="empty" id="none" hidden>ამ კატეგორიაში პროდუქტი არ არის.</p>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        var chips = document.querySelectorAll('.chip');
+        var cards = document.querySelectorAll('.card');
+        var count = document.getElementById('count');
+        var none = document.getElementById('none');
+
+        chips.forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                var f = chip.dataset.filter, shown = 0;
+                chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip); });
+                cards.forEach(function (card) {
+                    var show = f === 'all' || card.dataset.tier === f;
+                    card.hidden = !show;
+                    card.classList.remove('pop');
+                    if (show) { shown++; void card.offsetWidth; card.classList.add('pop'); }
+                });
+                count.textContent = shown + ' პროდუქტი';
+                none.hidden = shown !== 0;
+            });
+        });
+    })();
+</script>
+{% endblock %}
